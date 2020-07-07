@@ -34,16 +34,25 @@ export default {
 	  return {
 		  isToggleBizhi: false,
 		  yinqin: 'baidu',
-		  keywords: ''
+		  keywords: '',
+		  storage: ''
 	  }
   },
   components: {
 	  "bizhi": bizhiKuang
   },
   created() {
-  	this.$nextTick(()=>{
-		this.$refs.contain.style.backgroundImage = "url(indexBg/anime-people-6.jpg)"
-	})
+	const storage = this.storage = window.localStorage
+	if (storage.getItem("bgSrc")) {
+		this.$nextTick(()=>{
+			this.$refs.contain.style.backgroundImage = storage.getItem("bgSrc")
+		})		
+	} else{
+		storage.setItem("bgSrc", "url(indexBg/anime-people-6.jpg)")
+		this.$nextTick(()=>{
+			this.$refs.contain.style.backgroundImage = storage.getItem("bgSrc")
+		})	
+	}
   },
   methods: {
 	  updateBizhikuang(e) {
@@ -70,7 +79,9 @@ export default {
 		  }
 	  },
 	  getBgSrc(background) {
-		  this.$refs.contain.style.backgroundImage = "url("+background+")"
+		  const src = "url("+background+")"
+		  this.storage.setItem("bgSrc", src)
+		  this.$refs.contain.style.backgroundImage = this.storage.getItem("bgSrc")
 		  this.isToggleBizhi = false
 	  }
   }
